@@ -43,6 +43,8 @@ const registerUserController = async (req, res, next) => {
       }
     }
 
+    // checking password (Regular Expression)
+
     // hash password
     const encryptedPassword = hash(password);
 

@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
 const port = 2104;
+const bearerToken = require("express-bearer-token");
 
 // ROUTERS
 const userRouter = require("./routers/user");
 
+app.use(bearerToken());
 app.use(express.json());
 
 app.get("/", (req, res) => {
