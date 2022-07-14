@@ -7,6 +7,7 @@ const bearerToken = require("express-bearer-token");
 const userRouter = require("./routers/user");
 
 app.use(bearerToken());
+app.use("/public", express.static("public")); // mengizinkan folder public di akses
 app.use(express.json());
 
 app.get("/", (req, res) => {

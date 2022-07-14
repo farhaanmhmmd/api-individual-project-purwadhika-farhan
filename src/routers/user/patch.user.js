@@ -3,6 +3,7 @@ const router = express.Router();
 const {isFieldEmpties} = require("../../helpers");
 const {auth} = require("../../helpers/auth");
 const pool = require("../../lib/database");
+const {uploadAvatar} = require("../../lib/multer");
 
 const updateUserController = async (req, res, next) => {
   try {
@@ -59,6 +60,39 @@ const updateUserController = async (req, res, next) => {
   }
 };
 
+const updateUserAvatarController = async (req, res, next) => {
+  try {
+    const {user_id} = req.user;
+    const {filename} = req.file; // nama file
+    const connection = pool.promise();
+
+    const finalFileName = `/public/avatar/${filename}`;
+    const sqlUpdateAvatar = `UPDATE user SET ? WHERE user_id = ?`;
+    const dataUpdateAvatar = [{image: finalFileName}, user_id];
+    const [resUpdateAvatar] = await connection.query(
+      sqlUpdateAvatar,
+      dataUpdateAvatar
+    );
+
+    //  affectedRows adalah jumlah baris yang terupdate
+    if (!resUpdateAvatar.affectedRows)
+      throw {message: "Failed to update avatar"};
+
+    res.send({
+      status: "Success",
+      message: "Success update avatar",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 router.patch("/", auth, updateUserController);
+router.patch(
+  "/avatar",
+  auth,
+  uploadAvatar.single("avatar"),
+  updateUserAvatarController
+);
 
 module.exports = router;
