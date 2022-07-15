@@ -4,6 +4,7 @@ const {isFieldEmpties} = require("../../helpers");
 const pool = require("../../lib/database");
 const {hash, compare} = require("../../lib/bcryptjs");
 const {createToken} = require("../../lib/token");
+const {sendMail} = require("../../lib/nodemailer");
 
 const registerUserController = async (req, res, next) => {
   try {
@@ -55,6 +56,13 @@ const registerUserController = async (req, res, next) => {
       sqlCreateUser,
       dataCreateUser
     );
+
+    // create token untuk verifikasi
+    // token : eyJhbG
+    const token = createToken({user_id: resCreateUser.insertId});
+
+    // send verification email
+    await sendMail({email, token});
 
     res.send({
       status: "Success",
