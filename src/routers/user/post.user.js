@@ -84,7 +84,7 @@ const loginUserController = async (req, res, next) => {
 
     const connection = pool.promise();
 
-    const sqlGetUser = `SELECT user_id, username, password FROM user WHERE email = ?`;
+    const sqlGetUser = `SELECT user_id, username, password, isVerified FROM user WHERE email = ?`;
     const dataGetUser = [email];
     const [resGetUser] = await connection.query(sqlGetUser, dataGetUser);
 
@@ -97,6 +97,14 @@ const loginUserController = async (req, res, next) => {
     // compare password
     // if doesn't match, send error
     const user = resGetUser[0];
+
+    // check verified status
+    if (!user.isVerified) {
+      throw {
+        code: 403,
+        message: `You need verify first`,
+      };
+    }
 
     const isPasswordMatch = compare(password, user.password);
 
