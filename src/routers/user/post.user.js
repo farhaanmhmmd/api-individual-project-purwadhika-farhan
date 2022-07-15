@@ -54,7 +54,7 @@ const registerUserController = async (req, res, next) => {
       {
         username,
         email,
-        image: "/public/avatar/default-profile-icon.jpg",
+        image: "/public/avatar/default-profile-icon.png",
         password: encryptedPassword,
       },
     ];

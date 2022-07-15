@@ -17,14 +17,14 @@ const courier = nodemailer.createTransport({
 const sendMail = async ({email, token}) => {
   const mail = {
     from: "Twitlite Registration Admin <farhanmhmmd96@gmail.com>",
-    to: "farhanmhmmd96@gmail.com",
+    to: `${email}`,
     subject: "Twitlite Email Verification",
     html: `<h1>Click this <a href="http://localhost:2104/users/verification/${token}">link</a> to verify your email</h1>`,
   };
 
   try {
     await courier.sendMail(mail);
-    console.log("email berhasil dikirim");
+    console.log("Email sent");
   } catch (error) {
     throw error;
   }
