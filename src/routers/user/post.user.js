@@ -50,7 +50,14 @@ const registerUserController = async (req, res, next) => {
     const encryptedPassword = hash(password);
 
     const sqlCreateUser = `INSERT INTO user SET ?`;
-    const dataCreateUser = [{username, email, password: encryptedPassword}];
+    const dataCreateUser = [
+      {
+        username,
+        email,
+        image: "/public/avatar/default-profile-icon.jpg",
+        password: encryptedPassword,
+      },
+    ];
 
     const [resCreateUser] = await connection.query(
       sqlCreateUser,
@@ -66,7 +73,8 @@ const registerUserController = async (req, res, next) => {
 
     res.send({
       status: "Success",
-      message: "Success create new user",
+      message:
+        "Account was successfully created. Open your email to verify your account before you login.",
       data: {
         result: resCreateUser,
       },
@@ -102,7 +110,7 @@ const loginUserController = async (req, res, next) => {
     if (!user.isVerified) {
       throw {
         code: 403,
-        message: `You need verify first`,
+        message: `You need to verify your account before you login. Check your email for your account verification`,
       };
     }
 
