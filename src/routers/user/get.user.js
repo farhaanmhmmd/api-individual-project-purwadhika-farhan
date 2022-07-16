@@ -9,7 +9,7 @@ const getUserProfileController = async (req, res, next) => {
     const {user_id} = req.user;
 
     const connection = pool.promise();
-    const sqlGetUser = `SELECT user_id, username, first_name, last_name, email, phone, gender, image FROM user WHERE user_id = ?`;
+    const sqlGetUser = `SELECT user_id, username, first_name, last_name, email, phone, gender, age, image FROM user WHERE user_id = ?`;
     const dataGetUser = [user_id];
     const [resGetUser] = await connection.query(sqlGetUser, dataGetUser);
 
