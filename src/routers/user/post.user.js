@@ -8,7 +8,7 @@ const {sendMail} = require("../../lib/nodemailer");
 
 const registerUserController = async (req, res, next) => {
   try {
-    const {username, email, password} = req.body; // dari client
+    const {username, email, password} = req.body;
 
     const emptyFields = isFieldEmpties({username, email, password});
 
@@ -20,14 +20,12 @@ const registerUserController = async (req, res, next) => {
       };
     }
 
-    // mendapatkan connection
     const connection = pool.promise();
 
     const sqlGetUser = `SELECT username, email FROM user WHERE username = ? OR email = ?`;
     const dataGetUser = [username, email];
     const [resGetUser] = await connection.query(sqlGetUser, dataGetUser);
 
-    // jika mendapatkan user berdasarkan username atau email
     if (resGetUser.length) {
       const user = resGetUser[0];
 
@@ -44,9 +42,6 @@ const registerUserController = async (req, res, next) => {
       }
     }
 
-    // checking password (Regular Expression)
-
-    // hash password
     const encryptedPassword = hash(password);
 
     const sqlCreateUser = `INSERT INTO user SET ?`;
@@ -64,11 +59,8 @@ const registerUserController = async (req, res, next) => {
       dataCreateUser
     );
 
-    // create token untuk verifikasi
-    // token : eyJhbG
     const token = createToken({user_id: resCreateUser.insertId});
 
-    // send verification email
     await sendMail({email, token});
 
     res.send({
@@ -80,14 +72,12 @@ const registerUserController = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error); // error akan diteruskan ke error handler di index.js
+    next(error);
   }
 };
 
 const loginUserController = async (req, res, next) => {
   try {
-    // get user by email
-    // if not found, send error, user not found
     const {email, password} = req.body;
 
     const connection = pool.promise();
@@ -102,11 +92,9 @@ const loginUserController = async (req, res, next) => {
         message: `Can not find account with this email`,
       };
     }
-    // compare password
-    // if doesn't match, send error
+
     const user = resGetUser[0];
 
-    // check verified status
     if (!user.isVerified) {
       throw {
         code: 403,
@@ -123,8 +111,6 @@ const loginUserController = async (req, res, next) => {
       };
     }
 
-    // generate token
-    // send response with token
     const token = createToken({
       user_id: user.user_id,
       username: user.username,

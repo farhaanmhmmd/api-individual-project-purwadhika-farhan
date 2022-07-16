@@ -28,7 +28,6 @@ const updateUserController = async (req, res, next) => {
 
     const connection = pool.promise();
 
-    // check phone
     const sqlGetPhone = `SELECT phone FROM user WHERE phone = ?`;
     const dataGetPhone = [phone];
     const [resGetPhone] = await connection.query(sqlGetPhone, dataGetPhone);
@@ -36,7 +35,6 @@ const updateUserController = async (req, res, next) => {
     if (resGetPhone.length)
       throw {code: 401, message: "Phone number is already used"};
 
-    // update user
     const sqlUpdateUser = `UPDATE user SET ? WHERE user_id = ?`;
     const dataUpdateUser = [
       {first_name: firstName, last_name: lastName, age, gender, phone},
@@ -48,7 +46,6 @@ const updateUserController = async (req, res, next) => {
       dataUpdateUser
     );
 
-    //  affectedRows adalah jumlah baris yang terupdate
     if (!resUpdateUSer.affectedRows) throw {message: "Failed to update user"};
 
     res.send({
@@ -63,7 +60,7 @@ const updateUserController = async (req, res, next) => {
 const updateUserAvatarController = async (req, res, next) => {
   try {
     const {user_id} = req.user;
-    const {filename} = req.file; // nama file
+    const {filename} = req.file;
     const connection = pool.promise();
 
     const finalFileName = `/public/avatar/${filename}`;
@@ -74,7 +71,6 @@ const updateUserAvatarController = async (req, res, next) => {
       dataUpdateAvatar
     );
 
-    //  affectedRows adalah jumlah baris yang terupdate
     if (!resUpdateAvatar.affectedRows)
       throw {message: "Failed to update avatar"};
 

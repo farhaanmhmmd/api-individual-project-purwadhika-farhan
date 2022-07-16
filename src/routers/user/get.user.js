@@ -31,7 +31,6 @@ const verifyUserController = async (req, res, next) => {
   try {
     const {token} = req.params;
 
-    // verifiedToken = {user_id: 51}
     const veririedToken = verifyToken(token);
 
     const connection = pool.promise();

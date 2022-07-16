@@ -1,8 +1,7 @@
 const multer = require("multer");
-const path = require("path"); // built-in
+const path = require("path");
 const appRoot = require("app-root-path");
 
-// avatarPath : '/home/rochafi/bootcamp/api-mysql-2104/public/avatar'
 const avatarPath = path.join(appRoot.path, "public", "avatar");
 
 const storageAvatar = multer.diskStorage({
@@ -18,12 +17,11 @@ const storageAvatar = multer.diskStorage({
 const uploadAvatar = multer({
   storage: storageAvatar,
   limits: {
-    fileSize: 10485760, // Byte, 10 MB
+    fileSize: 10485760,
   },
   fileFilter(req, file, cb) {
     const allowedExtension = [".png", ".jpg", ".jpeg"];
-    //  file.originalname : purwadhika.png
-    //  extname : .png
+
     const extname = path.extname(file.originalname);
 
     if (!allowedExtension.includes(extname)) {

@@ -3,10 +3,8 @@ const {verifyToken} = require("../../lib/token");
 
 const auth = async (req, res, next) => {
   try {
-    // get token
     const token = req.token;
-    // verify token
-    // verifiedToken: { user_id: 41, username: 'bean999', iat: 1656909883 }
+
     const verifiedToken = verifyToken(token);
 
     const connection = pool.promise();
