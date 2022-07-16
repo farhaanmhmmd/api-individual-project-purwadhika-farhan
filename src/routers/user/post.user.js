@@ -78,18 +78,18 @@ const registerUserController = async (req, res, next) => {
 
 const loginUserController = async (req, res, next) => {
   try {
-    const {email, password} = req.body;
+    const {username, email, password} = req.body;
 
     const connection = pool.promise();
 
-    const sqlGetUser = `SELECT user_id, username, password, isVerified FROM user WHERE email = ?`;
-    const dataGetUser = [email];
+    const sqlGetUser = `SELECT user_id, username, password, isVerified FROM user WHERE username = ? OR email = ?`;
+    const dataGetUser = [username, email];
     const [resGetUser] = await connection.query(sqlGetUser, dataGetUser);
 
     if (!resGetUser.length) {
       throw {
         code: 404,
-        message: `Can not find account with this email`,
+        message: `Cannot find account with this username or email`,
       };
     }
 
