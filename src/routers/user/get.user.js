@@ -31,13 +31,13 @@ const verifyUserController = async (req, res, next) => {
   try {
     const {token} = req.params;
 
-    const veririedToken = verifyToken(token);
+    const verifiedToken = verifyToken(token);
 
     const connection = pool.promise();
     const sqlUpdateIsVerifiedStatus = `UPDATE user SET ? WHERE user_id = ?`;
     const dataUpdateIsVerifiedStatus = [
       {isVerified: true},
-      veririedToken.user_id,
+      verifiedToken.user_id,
     ];
 
     const [resUpdateIsVerifiedStatus] = await connection.query(

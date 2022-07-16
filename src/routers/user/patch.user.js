@@ -11,11 +11,11 @@ const updateUserController = async (req, res, next) => {
     const {firstName, lastName, age, gender, phone} = req.body;
 
     const emptyFields = isFieldEmpties({
-      firstName,
-      lastName,
-      age,
-      gender,
-      phone,
+      // firstName,
+      // lastName,
+      // age,
+      // gender,
+      // phone,
     });
 
     if (emptyFields.length) {
@@ -32,8 +32,15 @@ const updateUserController = async (req, res, next) => {
     const dataGetPhone = [phone];
     const [resGetPhone] = await connection.query(sqlGetPhone, dataGetPhone);
 
-    if (resGetPhone.length)
-      throw {code: 401, message: "Phone number is already used"};
+    // if (resGetPhone.length)
+    //   throw {code: 401, message: "Phone number is already used"};
+    // return false;
+
+    if (!parseInt(phone) || phone.length >= 13)
+      throw {code: 401, message: "Phone Number is invalid"};
+
+    if (!parseInt(age) || age >= 100)
+      throw {code: 401, message: "Age is invalid"};
 
     const sqlUpdateUser = `UPDATE user SET ? WHERE user_id = ?`;
     const dataUpdateUser = [
