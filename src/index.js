@@ -32,5 +32,5 @@ app.use((error, req, res, next) => {
 
 app.listen(port, (error) => {
   if (error) return console.log({err: error.message});
-  console.log(`API berhasil running di port ${port}`);
+  console.log(`API is running in port ${port}`);
 });

@@ -21,7 +21,8 @@ const updateUserController = async (req, res, next) => {
     if (emptyFields.length) {
       throw {
         code: 400,
-        message: `Empty fields :  ${emptyFields}`,
+        message: "Username cannot be empty",
+        // message: `Empty fields :  ${emptyFields}`,
         data: {result: emptyFields},
       };
     }
