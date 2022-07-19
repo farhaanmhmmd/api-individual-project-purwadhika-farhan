@@ -8,14 +8,14 @@ const {uploadAvatar} = require("../../lib/multer");
 const updateUserController = async (req, res, next) => {
   try {
     const {user_id} = req.user;
-    const {firstName, lastName, age, gender, phone} = req.body;
+    const {username, firstName, lastName, age, gender} = req.body;
 
     const emptyFields = isFieldEmpties({
+      username,
       // firstName,
       // lastName,
       // age,
-      // gender,
-      // phone,
+      // gender
     });
 
     if (emptyFields.length) {
@@ -28,23 +28,27 @@ const updateUserController = async (req, res, next) => {
 
     const connection = pool.promise();
 
-    const sqlGetPhone = `SELECT phone FROM user WHERE phone = ?`;
-    const dataGetPhone = [phone];
-    const [resGetPhone] = await connection.query(sqlGetPhone, dataGetPhone);
+    const sqlGetUsername = `SELECT username FROM user WHERE username = ?`;
+    const dataGetUsername = [username];
+    const [resGetUsername] = await connection.query(
+      sqlGetUsername,
+      dataGetUsername
+    );
 
-    // if (resGetPhone.length)
-    //   throw {code: 401, message: "Phone number is already used"};
-    // return false;
+    if (resGetUsername.length)
+      throw {code: 401, message: "username is already used"};
 
-    if (!parseInt(phone) || phone.length >= 13)
-      throw {code: 401, message: "Phone Number is invalid"};
-
-    if (!parseInt(age) || age >= 100)
-      throw {code: 401, message: "Age is invalid"};
+    // if (age >= 100) throw {code: 401, message: "Age is invalid"};
 
     const sqlUpdateUser = `UPDATE user SET ? WHERE user_id = ?`;
     const dataUpdateUser = [
-      {first_name: firstName, last_name: lastName, age, gender, phone},
+      {
+        username,
+        first_name: firstName,
+        last_name: lastName,
+        age,
+        gender,
+      },
       user_id,
     ];
 
